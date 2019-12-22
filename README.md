@@ -4,13 +4,13 @@ recurdir is a lightweight package written in typescript that allows you to make/
 
 ## Installation
 
-```shell 
+```sh
 npm i recurdir 
 ```
 
 ## Usage
 
-```typescript
+```js
 import * as recurdir from 'recurdir';
 //or const recurdir = require('recurdir');
 
