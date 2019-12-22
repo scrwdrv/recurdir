@@ -1,6 +1,6 @@
 {
   "name": "recurdir",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -8,8 +8,8 @@
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
     "@types/node": "^12.12.21"
-  },
-  "devDependencies": {}
+  }
 }
