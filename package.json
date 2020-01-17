@@ -1,6 +1,6 @@
 {
   "name": "recurdir",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "recurdir is a lightweight package written in typescript that allows you to make/remove directories easily.",
   "main": "index.js",
   "scripts": {

@@ -104,7 +104,7 @@ function stats(path, callback, formatter) {
             });
         }
         else
-            callback(null, formatter ? formatter(s) : s);
+            callback(null, formatter ? formatter(s, path) : s);
     });
 }
 exports.stats = stats;

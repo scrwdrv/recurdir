@@ -78,7 +78,7 @@ export function rm(paths: string | string[], callback?: cb) {
     });
 }
 
-export function stats(path: string, callback: (err: NodeJS.ErrnoException, dirStats?: any) => void, formatter?: (stats: fs.Stats) => any) {
+export function stats(path: string, callback: (err: NodeJS.ErrnoException, dirStats?: any) => void, formatter?: (stats: fs.Stats, path: string) => any) {
     fs.stat(path, (err, s) => {
         if (err) return callback(err);
 
@@ -106,6 +106,6 @@ export function stats(path: string, callback: (err: NodeJS.ErrnoException, dirSt
 
             });
 
-        } else callback(null, formatter ? formatter(s) : s);
+        } else callback(null, formatter ? formatter(s, path) : s);
     });
 }
