@@ -34,7 +34,7 @@ recurdir.mk(['./path/to/dir', './path/to/dir2']).then(() => {
     console.log(err)
 });
 ```
-### getStats
+### stats
 ```js
 recurdir.stats('./node_modules', (err, stats) => {
     if (err) return console.log(err);
