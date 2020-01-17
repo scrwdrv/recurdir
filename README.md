@@ -36,43 +36,35 @@ recurdir.mk(['./path/to/dir', './path/to/dir2']).then(() => {
 ```
 ### getStats
 ```js
-recurdir.getStats('./node_modules', (err, stats) => {
+recurdir.stats('./node_modules', (err, stats) => {
     if (err) return console.log(err);
     console.log(stats);
-
     /* output:
-
     {
       '@types': {
           node: {
             'zlib.d.ts': [Stats],
             'worker_threads.d.ts': [Stats],
             'vm.d.ts': [Stats],
-            'v8.d.ts': [Stats],
-            
+            'v8.d.ts': [Stats],      
             .
             .
             .
-
             'assert.d.ts': [Stats],
             'ts3.2': [Object]
           }
        }
     }
-
     */
-
 });
 ```
 
 #### With Formatter
 ```js
-recurdir.getStats('./node_modules', (err, stats) => {
+recurdir.stats('./node_modules', (err, stats) => {
     if (err) return console.log(err);
     console.log(stats);
-
     /* output:
-
     {
       '@types': {
           node: {
@@ -80,19 +72,15 @@ recurdir.getStats('./node_modules', (err, stats) => {
             'zlib.d.ts': 12182,
             'vm.d.ts': 4542,
             'v8.d.ts': 6927,
-            
             .
             .
             .
-
             'assert.d.ts': 2660,
             'ts3.2': [Object]
           }
        }
     }
-
     */
-
 }, (stats) => {
     return stats.size;
 });
