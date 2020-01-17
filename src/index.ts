@@ -44,11 +44,11 @@ function remove(path: string) {
     );
 }
 
-type cb = (err?: NodeJS.ErrnoException) => void;
+type cb = (err: NodeJS.ErrnoException) => void;
 
 export function mk(paths: string | string[], callback?: cb) {
     return new Promise((resolve, reject) => {
-        function tryCallback(err?: NodeJS.ErrnoException) {
+        function tryCallback(err: NodeJS.ErrnoException) {
             if (callback) callback(err);
             else err ? reject(err) : resolve();
         }
@@ -58,13 +58,13 @@ export function mk(paths: string | string[], callback?: cb) {
         let promises = [];
 
         for (let i = 0, l = paths.length; i < l; i++) promises.push(make(paths[i]));
-        Promise.all(promises).then(() => tryCallback()).catch(tryCallback);
+        Promise.all(promises).then(() => tryCallback(null)).catch(tryCallback);
     });
 }
 
 export function rm(paths: string | string[], callback?: cb) {
     return new Promise((resolve, reject) => {
-        function tryCallback(err?: NodeJS.ErrnoException) {
+        function tryCallback(err: NodeJS.ErrnoException) {
             if (callback) callback(err);
             else err ? reject(err) : resolve();
         }
@@ -74,6 +74,38 @@ export function rm(paths: string | string[], callback?: cb) {
         let promises = [];
 
         for (let i = 0, l = paths.length; i < l; i++) promises.push(remove(paths[i]));
-        Promise.all(promises).then(() => tryCallback()).catch(tryCallback);
+        Promise.all(promises).then(() => tryCallback(null)).catch(tryCallback);
+    });
+}
+
+export function stats(path: string, callback: (err: NodeJS.ErrnoException, dirStats?: any) => void, formatter?: (stats: fs.Stats) => any) {
+    fs.stat(path, (err, s) => {
+        if (err) return callback(err);
+
+        if (s.isDirectory()) {
+            let result = {};
+
+            fs.readdir(path, (err, files) => {
+                if (err) return callback(err);
+
+                const l = files.length;
+
+                if (!l) return callback(null, result);
+
+                let t = 0;
+
+                for (let i = l; i--;) {
+                    const file = files[i];
+                    stats(PATH.join(path, file), (err, s) => {
+                        if (err) return callback(err);
+                        result[file] = s;
+                        t++;
+                        if (t === l) callback(null, result);
+                    }, formatter);
+                }
+
+            });
+
+        } else callback(null, formatter ? formatter(s) : s);
     });
 }

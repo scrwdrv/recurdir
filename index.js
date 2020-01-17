@@ -56,7 +56,7 @@ function mk(paths, callback) {
         let promises = [];
         for (let i = 0, l = paths.length; i < l; i++)
             promises.push(make(paths[i]));
-        Promise.all(promises).then(() => tryCallback()).catch(tryCallback);
+        Promise.all(promises).then(() => tryCallback(null)).catch(tryCallback);
     });
 }
 exports.mk = mk;
@@ -73,7 +73,38 @@ function rm(paths, callback) {
         let promises = [];
         for (let i = 0, l = paths.length; i < l; i++)
             promises.push(remove(paths[i]));
-        Promise.all(promises).then(() => tryCallback()).catch(tryCallback);
+        Promise.all(promises).then(() => tryCallback(null)).catch(tryCallback);
     });
 }
 exports.rm = rm;
+function stats(path, callback, formatter) {
+    fs.stat(path, (err, s) => {
+        if (err)
+            return callback(err);
+        if (s.isDirectory()) {
+            let result = {};
+            fs.readdir(path, (err, files) => {
+                if (err)
+                    return callback(err);
+                const l = files.length;
+                if (!l)
+                    return callback(null, result);
+                let t = 0;
+                for (let i = l; i--;) {
+                    const file = files[i];
+                    stats(PATH.join(path, file), (err, s) => {
+                        if (err)
+                            return callback(err);
+                        result[file] = s;
+                        t++;
+                        if (t === l)
+                            callback(null, result);
+                    }, formatter);
+                }
+            });
+        }
+        else
+            callback(null, formatter ? formatter(s) : s);
+    });
+}
+exports.stats = stats;
